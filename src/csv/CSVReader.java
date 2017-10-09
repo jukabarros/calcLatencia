@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import entity.CassandraTime;
+import entity.YCSBTime;
 
 public class CSVReader {
 
@@ -27,6 +28,7 @@ public class CSVReader {
 		for (File file : fList) {
 			if (file.isFile()){
 				if (file.getName().endsWith(".csv")){
+					System.out.println(file.getName());
 					allCsvFiles.add(file.getAbsolutePath());
 				}
 				else {
@@ -53,8 +55,8 @@ public class CSVReader {
 			while ((line = br.readLine()) != null) {
 				String[] csvLine = line.split(lineSplitBy);
 				Integer sample = Integer.parseInt(csvLine[0]);
-				Date init = this.convertToDate(csvLine[1]);
-				Date end = this.convertToDate(csvLine[2]);
+				Date init = this.convertToDateFromCassandraLog(csvLine[1]);
+				Date end = this.convertToDateFromCassandraLog(csvLine[2]);
 				Integer time = Integer.parseInt(csvLine[3]);
 				CassandraTime ct = new CassandraTime(sample, init, end, time);
 				cassandraTimes.add(ct);
@@ -79,18 +81,21 @@ public class CSVReader {
 	 * @param csvFile
 	 * @throws IOException 
 	 */
-	public void readCSVFileFromLogYCSB(String csvFile) throws IOException {
+	public List<YCSBTime> readCSVFileFromLogYCSB(String csvFile) throws IOException {
 		BufferedReader br = null;
 		String line = "";
 		String lineSplitBy = ";";
+		List<YCSBTime> ycsbTimes = new ArrayList<YCSBTime>();
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
 			while ((line = br.readLine()) != null) {
 				String[] csvLine = line.split(lineSplitBy);
-				String sample = csvLine[0];
-				String date = csvLine[1];
-				String txReq = csvLine[2];
-				String latency = csvLine[3];
+				Integer sample = Integer.parseInt(csvLine[0]);
+				Date date = this.convertToDateFromYCSBLog(csvLine[1]);
+				double txReq = Double.parseDouble(csvLine[2]);
+				double latency = Double.parseDouble(csvLine[3]);
+				YCSBTime yt = new YCSBTime(sample, date, txReq, latency);
+				ycsbTimes.add(yt);
 			}
 
 		} catch (FileNotFoundException e) {
@@ -104,16 +109,37 @@ public class CSVReader {
 				}
 			}
 		}
+		return ycsbTimes;
 	}
 
 	/**
-	 * Converte a string data do CSV para o formato Date
+	 * Converte a string data do CSV do Log Cassandra
+	 * para o formato Date
 	 * @param dateStr
 	 * @return
 	 */
-	public Date convertToDate (String dateStr) {
+	private Date convertToDateFromCassandraLog(String dateStr) {
 		// Exemplo: 13:21:40,134
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss,SSS");
+		try {
+			Date date = formatter.parse(dateStr);
+			return date;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.err.println("Erro na conversão da Data");
+			return null;
+		}
+	}
+	
+	/**
+	 * Converte a string data do CSV do Log YCSB
+	 * para o formato Date
+	 * @param dateStr
+	 * @return
+	 */
+	private Date convertToDateFromYCSBLog(String dateStr) {
+		// Exemplo: 11:44:05:460
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
 		try {
 			Date date = formatter.parse(dateStr);
 			return date;

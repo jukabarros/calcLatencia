@@ -8,7 +8,8 @@ package entity;
  */
 public class CatLatencia {
 	
-	private Double tempo;
+	// Valor Latencia
+	private Double latency;
 	
 	private boolean isflush;
 	
@@ -20,13 +21,15 @@ public class CatLatencia {
 	
 	}
 
-	public Double getTempo() {
-		return tempo;
+	public Double getLatency() {
+		return latency;
 	}
 
-	public void setTempo(Double tempo) {
-		this.tempo = tempo;
+
+	public void setLatency(Double latency) {
+		this.latency = latency;
 	}
+
 
 	public boolean isIsflush() {
 		return isflush;
@@ -52,11 +55,5 @@ public class CatLatencia {
 		this.isCompMega = isCompMega;
 	}
 
-	@Override
-	public String toString() {
-		return "CatLatencia [tempo=" + tempo + ", isflush=" + isflush + ", isCompSimples=" + isCompSimples
-				+ ", isCompMega=" + isCompMega + "]";
-	}
-	
 
 }
