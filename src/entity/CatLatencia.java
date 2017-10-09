@@ -1,5 +1,11 @@
 package entity;
 
+/**
+ * Classe que representa o valor da latencia
+ * categorizado
+ * @author juccelino.barros
+ *
+ */
 public class CatLatencia {
 	
 	private Double tempo;
