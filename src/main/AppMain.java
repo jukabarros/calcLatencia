@@ -57,7 +57,16 @@ public class AppMain {
 			CatLatencia cl = catLatencias.get(i);
 			System.out.println(cl.getLatency()+"\t"+cl.isIsflush()+"\t"+cl.isCompSimples()+"\t"+cl.isCompMega());
 		}
-		System.out.println("*** END ***");
+		
+		List<CatLatencia> catLatenciasAVG = getAvgCatlatencia(catLatencias);
+		System.out.println("\n\n************* MEDIA *************");
+		System.out.println("\nLatency Flush CSimples CMega");
+		for (int i = 0; i < catLatenciasAVG.size(); i++) {
+			CatLatencia cl = catLatenciasAVG.get(i);
+			System.out.printf("%.2f"+"\t"+cl.isIsflush()+"\t"+cl.isCompSimples()+"\t"+cl.isCompMega(), cl.getLatency());
+			System.out.println("\n");
+		}
+		System.out.println("\n*** END ***");
 	}
 
 	/**
@@ -82,14 +91,12 @@ public class AppMain {
 			for (int j = 0; j < flushTimes.size(); j++) {
 				if (flushTimes.get(j).getDateInit().before(dateYcsb) && flushTimes.get(j).getDateEnd().after(dateYcsb)) {
 					cl.setIsflush(true);
-					break;
 				}
 			}
 			// Comp Simples
 			for (int j = 0; j < compSimplesTimes.size(); j++) {
 				if (compSimplesTimes.get(j).getDateInit().before(dateYcsb) && compSimplesTimes.get(j).getDateEnd().after(dateYcsb)) {
 					cl.setCompSimples(true);
-					break;
 				}
 
 			}
@@ -97,13 +104,92 @@ public class AppMain {
 			for (int j = 0; j < compMegaTimes.size(); j++) {
 				if (compMegaTimes.get(j).getDateInit().before(dateYcsb) && compMegaTimes.get(j).getDateEnd().after(dateYcsb)) {
 					cl.setCompMega(true);
-					break;
 				}
 
 			}
 			catLatencias.add(cl);
 		}
 		return catLatencias;
+	}
+	
+	/**
+	 * Calcula a media dos valores obtidos de acordo com o evento
+	 * @param catLatencias
+	 */
+	private static List<CatLatencia> getAvgCatlatencia(List<CatLatencia> catLatencias) {
+		List<Double> noOne = new ArrayList<Double>();
+		List<Double> justFlush = new ArrayList<Double>();
+		List<Double> justCompSimples = new ArrayList<Double>();
+		List<Double> justCompMega = new ArrayList<Double>();
+		List<Double> flushCompSimples = new ArrayList<Double>();
+		List<Double> flushCompMega = new ArrayList<Double>();
+		List<Double> compSimplesCompMega = new ArrayList<Double>();
+		List<Double> all = new ArrayList<Double>();
+		for (int i = 0; i < catLatencias.size(); i++) {
+			CatLatencia cl = catLatencias.get(i);
+			// Nao ocorreu nada
+			if (!cl.isIsflush() && !cl.isCompSimples() && !cl.isCompMega()) {
+				noOne.add(cl.getLatency());
+			} // Apenas Flush			
+			else if (cl.isIsflush() && !cl.isCompSimples() && !cl.isCompMega()) {
+				justFlush.add(cl.getLatency());
+			} // Apenas Comp Simples 			
+			else if (!cl.isIsflush() && cl.isCompSimples() && !cl.isCompMega()) {
+				justCompSimples.add(cl.getLatency());
+			} // Apenas Comp Mega 			
+			else if (!cl.isIsflush() && !cl.isCompSimples() && cl.isCompMega()) {
+				justCompMega.add(cl.getLatency());
+			} // Flush e Comp Simples			
+			else if (cl.isIsflush() && cl.isCompSimples() && !cl.isCompMega()) {
+				flushCompSimples.add(cl.getLatency());
+			} // Flush e Comp Mega
+			else if (cl.isIsflush() && !cl.isCompSimples() && cl.isCompMega()) {
+				flushCompMega.add(cl.getLatency());
+			} // CompSimples e Comp Mega
+			else if (!cl.isIsflush() && cl.isCompSimples() && cl.isCompMega()) {
+				compSimplesCompMega.add(cl.getLatency());
+			} // aconteceu todos os eventos
+			else {
+				all.add(cl.getLatency());
+			}
+		}
+		List<CatLatencia> catLatenciasAVG = new ArrayList<CatLatencia>();
+		/*
+		 * CALCULO DAS MEDIAS DE CADA COMBINACAO
+		 */
+	    Double averageNoOne = noOne.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia onOneCL = new CatLatencia(averageNoOne, false, false, false);
+	    catLatenciasAVG.add(onOneCL);
+	    
+	    Double averageIsFlush = justFlush.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia isFlushCL = new CatLatencia(averageIsFlush, true, false, false);
+	    catLatenciasAVG.add(isFlushCL);
+	    
+	    Double averageIsCompSimples = justCompSimples.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia isCompSimplesCL = new CatLatencia(averageIsCompSimples, false, true, false);
+	    catLatenciasAVG.add(isCompSimplesCL);
+	    
+	    Double averageIsCompMega = justCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia isCompMegaCL = new CatLatencia(averageIsCompMega, false, false, true);
+	    catLatenciasAVG.add(isCompMegaCL);
+	    
+	    Double averageFlushAndCompSimples = flushCompSimples.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia isFlushCompSimplesCL = new CatLatencia(averageFlushAndCompSimples, true, true, false);
+	    catLatenciasAVG.add(isFlushCompSimplesCL);
+	    
+	    Double averageFlushAndCompMega = flushCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia isFlushCompMegaCL = new CatLatencia(averageFlushAndCompMega, true, false, true);
+	    catLatenciasAVG.add(isFlushCompMegaCL);
+	    
+	    Double averageCompSimplesAndCompMega = compSimplesCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia CompSimplesCompMegaCL = new CatLatencia(averageCompSimplesAndCompMega, false, true, true);
+	    catLatenciasAVG.add(CompSimplesCompMegaCL);
+	    
+	    Double averageAll = all.stream().mapToDouble(val -> val).average().getAsDouble();
+	    CatLatencia allCL = new CatLatencia(averageAll, true, true, true);
+	    catLatenciasAVG.add(allCL);
+	    
+	    return catLatenciasAVG;
 	}
 
 }

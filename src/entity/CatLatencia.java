@@ -20,6 +20,14 @@ public class CatLatencia {
 	public CatLatencia() {
 	
 	}
+	
+	public CatLatencia(Double latency, boolean isflush, boolean isCompSimples, boolean isCompMega) {
+		super();
+		this.latency = latency;
+		this.isflush = isflush;
+		this.isCompSimples = isCompSimples;
+		this.isCompMega = isCompMega;
+	}
 
 	public Double getLatency() {
 		return latency;
