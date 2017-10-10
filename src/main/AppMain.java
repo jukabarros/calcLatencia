@@ -91,12 +91,14 @@ public class AppMain {
 			for (int j = 0; j < flushTimes.size(); j++) {
 				if (flushTimes.get(j).getDateInit().before(dateYcsb) && flushTimes.get(j).getDateEnd().after(dateYcsb)) {
 					cl.setIsflush(true);
+					break;
 				}
 			}
 			// Comp Simples
 			for (int j = 0; j < compSimplesTimes.size(); j++) {
 				if (compSimplesTimes.get(j).getDateInit().before(dateYcsb) && compSimplesTimes.get(j).getDateEnd().after(dateYcsb)) {
 					cl.setCompSimples(true);
+					break;
 				}
 
 			}
@@ -104,6 +106,7 @@ public class AppMain {
 			for (int j = 0; j < compMegaTimes.size(); j++) {
 				if (compMegaTimes.get(j).getDateInit().before(dateYcsb) && compMegaTimes.get(j).getDateEnd().after(dateYcsb)) {
 					cl.setCompMega(true);
+					break;
 				}
 
 			}
