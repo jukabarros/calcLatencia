@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -148,6 +149,28 @@ public class CSVReader {
 			System.err.println("Erro na conversão da Data");
 			return null;
 		}
+	}
+	
+	/**
+	 * Exporta as listas com os valores das combinacoes 
+	 * para um arquivo CSV
+	 * @param avgs
+	 */
+	public void exportCSVData(List<Double> lists, String nameCSV) {
+		FileWriter writer;
+		try {
+			writer = new FileWriter("results/"+nameCSV);
+			for (int i = 0; i < lists.size(); i++) {
+				writer.append(lists.get(i)+"\n");
+			}
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 
 }
