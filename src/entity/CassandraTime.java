@@ -17,13 +17,10 @@ public class CassandraTime {
 	
 	private Date dateEnd;
 	
-	private Integer timeInMs;
-
-	public CassandraTime(Integer sample, Date dateInit, Date dateEnd, Integer timeInMs) {
+	public CassandraTime(Integer sample, Date dateInit, Date dateEnd) {
 		this.sample = sample;
 		this.dateInit = dateInit;
 		this.dateEnd = dateEnd;
-		this.timeInMs = timeInMs;
 	}
 
 	public Integer getSample() {
@@ -50,18 +47,9 @@ public class CassandraTime {
 		this.dateEnd = dateEnd;
 	}
 
-	public Integer getTimeInMs() {
-		return timeInMs;
-	}
-
-	public void setTimeInMs(Integer timeInMs) {
-		this.timeInMs = timeInMs;
-	}
-
 	@Override
 	public String toString() {
-		return "CassandraTime [sample=" + sample + ", dateInit=" + dateInit + ", dateEnd=" + dateEnd + ", timeInMs="
-				+ timeInMs + "]";
+		return "CassandraTime [sample=" + sample + ", dateInit=" + dateInit + ", dateEnd=" + dateEnd +"]";
 	}
 	
 }

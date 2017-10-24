@@ -58,8 +58,7 @@ public class CSVReader {
 				Integer sample = Integer.parseInt(csvLine[0]);
 				Date init = this.convertToDateFromCassandraLog(csvLine[1]);
 				Date end = this.convertToDateFromCassandraLog(csvLine[2]);
-				Integer time = Integer.parseInt(csvLine[3]);
-				CassandraTime ct = new CassandraTime(sample, init, end, time);
+				CassandraTime ct = new CassandraTime(sample, init, end);
 				cassandraTimes.add(ct);
 			}
 
@@ -93,9 +92,9 @@ public class CSVReader {
 				String[] csvLine = line.split(lineSplitBy);
 				Integer sample = Integer.parseInt(csvLine[0]);
 				Date date = this.convertToDateFromYCSBLog(csvLine[1]);
-				double txReq = Double.parseDouble(csvLine[2]);
-				double latency = Double.parseDouble(csvLine[3]);
-				YCSBTime yt = new YCSBTime(sample, date, txReq, latency);
+//				double txReq = Double.parseDouble(csvLine[2]);
+				double latency = Double.parseDouble(csvLine[2]);
+				YCSBTime yt = new YCSBTime(sample, date, latency);
 				ycsbTimes.add(yt);
 			}
 

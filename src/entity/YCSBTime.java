@@ -13,15 +13,12 @@ public class YCSBTime {
 	
 	private Date date;
 	
-	private Double txReq;
-	
 	private Double latencyInUs;
 
-	public YCSBTime(Integer sample, Date date, Double txReq, Double latencyInUs) {
+	public YCSBTime(Integer sample, Date date, Double latencyInUs) {
 		super();
 		this.sample = sample;
 		this.date = date;
-		this.txReq = txReq;
 		this.latencyInUs = latencyInUs;
 	}
 
@@ -41,14 +38,6 @@ public class YCSBTime {
 		this.date = date;
 	}
 
-	public Double getTxReq() {
-		return txReq;
-	}
-
-	public void setTxReq(Double txReq) {
-		this.txReq = txReq;
-	}
-
 	public Double getLatencyInUs() {
 		return latencyInUs;
 	}
@@ -59,7 +48,7 @@ public class YCSBTime {
 
 	@Override
 	public String toString() {
-		return "YCSBTime [sample=" + sample + ", date=" + date + ", txReq=" + txReq + ", latencyInUs=" + latencyInUs
+		return "YCSBTime [sample=" + sample + ", date=" + date + ", latencyInUs=" + latencyInUs
 				+ "]";
 	}
 
