@@ -162,53 +162,68 @@ public class AppMain {
 		 * CALCULO DAS MEDIAS DE CADA COMBINACAO
 		 * GERA ARQUIVO CSV DE CADA LISTA
 		 */
-	    Double averageNoOne = noOne.stream().mapToDouble(val -> val).average().getAsDouble();
-	    System.out.println("\n(1) Qntd Registros noOne.csv: "+noOne.size());
-	    csvReader.exportCSVData(noOne, "noOne.csv");
-	    CatLatencia onOneCL = new CatLatencia(averageNoOne, false, false, false);
-	    catLatenciasAVG.add(onOneCL);
-	    
-	    Double averageIsFlush = justFlush.stream().mapToDouble(val -> val).average().getAsDouble();
+		if (!noOne.isEmpty()) {
+			Double averageNoOne = noOne.stream().mapToDouble(val -> val).average().getAsDouble();
+			csvReader.exportCSVData(noOne, "noOne.csv");
+			CatLatencia onOneCL = new CatLatencia(averageNoOne, false, false, false);
+			catLatenciasAVG.add(onOneCL);
+		} 
+		System.out.println("\n(1) Qntd Registros noOne.csv: "+noOne.size());
+	    if (!justFlush.isEmpty()) {
+	    	Double averageIsFlush = justFlush.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(justFlush, "justFlush.csv");
+	    	CatLatencia isFlushCL = new CatLatencia(averageIsFlush, true, false, false);
+	    	catLatenciasAVG.add(isFlushCL);
+	    }
 	    System.out.println("\n(2) Qntd Registros justFlush.csv: "+justFlush.size());
-	    csvReader.exportCSVData(justFlush, "justFlush.csv");
-	    CatLatencia isFlushCL = new CatLatencia(averageIsFlush, true, false, false);
-	    catLatenciasAVG.add(isFlushCL);
 	    
-	    Double averageIsCompSimples = justCompSimples.stream().mapToDouble(val -> val).average().getAsDouble();
+	    if (!justCompSimples.isEmpty()){
+	    	Double averageIsCompSimples = justCompSimples.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(justCompSimples, "justCompSimples.csv");
+	    	CatLatencia isCompSimplesCL = new CatLatencia(averageIsCompSimples, false, true, false);
+	    	catLatenciasAVG.add(isCompSimplesCL);
+	    }
 	    System.out.println("\n(3) Qntd Registros justCompSimples.csv: "+justCompSimples.size());
-	    csvReader.exportCSVData(justCompSimples, "justCompSimples.csv");
-	    CatLatencia isCompSimplesCL = new CatLatencia(averageIsCompSimples, false, true, false);
-	    catLatenciasAVG.add(isCompSimplesCL);
 	    
-	    Double averageIsCompMega = justCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    if (!justCompMega.isEmpty()){
+	    	Double averageIsCompMega = justCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(justCompMega, "justCompMega.csv");
+	    	CatLatencia isCompMegaCL = new CatLatencia(averageIsCompMega, false, false, true);
+	    	catLatenciasAVG.add(isCompMegaCL);
+	    }
 	    System.out.println("\n(4) Qntd Registros justCompMega.csv: "+justCompMega.size());
-	    csvReader.exportCSVData(justCompMega, "justCompMega.csv");
-	    CatLatencia isCompMegaCL = new CatLatencia(averageIsCompMega, false, false, true);
-	    catLatenciasAVG.add(isCompMegaCL);
 	    
-	    Double averageFlushAndCompSimples = flushCompSimples.stream().mapToDouble(val -> val).average().getAsDouble();
+	    if (!flushCompSimples.isEmpty()){
+	    	Double averageFlushAndCompSimples = flushCompSimples.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(flushCompSimples, "flushCompSimples.csv");
+	    	CatLatencia isFlushCompSimplesCL = new CatLatencia(averageFlushAndCompSimples, true, true, false);
+	    	catLatenciasAVG.add(isFlushCompSimplesCL);
+	    }
 	    System.out.println("\n(5) Qntd Registros flushCompSimples.csv: "+flushCompSimples.size());
-	    csvReader.exportCSVData(flushCompSimples, "flushCompSimples.csv");
-	    CatLatencia isFlushCompSimplesCL = new CatLatencia(averageFlushAndCompSimples, true, true, false);
-	    catLatenciasAVG.add(isFlushCompSimplesCL);
 	    
-	    Double averageFlushAndCompMega = flushCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    if (!flushCompMega.isEmpty()) {
+	    	Double averageFlushAndCompMega = flushCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(flushCompMega, "flushCompMega.csv");
+	    	CatLatencia isFlushCompMegaCL = new CatLatencia(averageFlushAndCompMega, true, false, true);
+	    	catLatenciasAVG.add(isFlushCompMegaCL);
+	    }
 	    System.out.println("\n(6) Qntd Registros flushCompMega.csv: "+flushCompMega.size());
-	    csvReader.exportCSVData(flushCompMega, "flushCompMega.csv");
-	    CatLatencia isFlushCompMegaCL = new CatLatencia(averageFlushAndCompMega, true, false, true);
-	    catLatenciasAVG.add(isFlushCompMegaCL);
 	    
-	    Double averageCompSimplesAndCompMega = compSimplesCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    if (!compSimplesCompMega.isEmpty()) {
+	    	Double averageCompSimplesAndCompMega = compSimplesCompMega.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(compSimplesCompMega, "compSimplesCompMega.csv");
+	    	CatLatencia CompSimplesCompMegaCL = new CatLatencia(averageCompSimplesAndCompMega, false, true, true);
+	    	catLatenciasAVG.add(CompSimplesCompMegaCL);
+	    }
 	    System.out.println("\n(7) Qntd Registros compSimplesCompMega.csv: "+compSimplesCompMega.size());
-	    csvReader.exportCSVData(compSimplesCompMega, "compSimplesCompMega.csv");
-	    CatLatencia CompSimplesCompMegaCL = new CatLatencia(averageCompSimplesAndCompMega, false, true, true);
-	    catLatenciasAVG.add(CompSimplesCompMegaCL);
 	    
-	    Double averageAll = all.stream().mapToDouble(val -> val).average().getAsDouble();
+	    if (!all.isEmpty()) {
+	    	Double averageAll = all.stream().mapToDouble(val -> val).average().getAsDouble();
+	    	csvReader.exportCSVData(all, "all.csv");
+	    	CatLatencia allCL = new CatLatencia(averageAll, true, true, true);
+	    	catLatenciasAVG.add(allCL);
+	    }
 	    System.out.println("\n(8) Qntd Registros all.csv: "+all.size());
-	    csvReader.exportCSVData(all, "all.csv");
-	    CatLatencia allCL = new CatLatencia(averageAll, true, true, true);
-	    catLatenciasAVG.add(allCL);
 	    
 	    System.out.println("\n** Qntd Total Registros: "+catLatencias.size());
 	    return catLatenciasAVG;
