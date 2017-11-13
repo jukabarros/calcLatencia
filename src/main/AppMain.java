@@ -51,11 +51,6 @@ public class AppMain {
 		
 		System.out.println("\n*** Resultado");
 		List<CatLatencia> catLatencias = getLatenciasCategorizada(compMegaTimes, compSimplesTimes, flushTimes, ycsbTimes);
-//		System.out.println("Latency Flush CSimples CMega");
-//		for (int i = 0; i < catLatencias.size(); i++) {
-//			CatLatencia cl = catLatencias.get(i);
-//			System.out.println(cl.getLatency()+"\t"+cl.isIsflush()+"\t"+cl.isCompSimples()+"\t"+cl.isCompMega());
-//		}
 		
 		List<CatLatencia> catLatenciasAVG = getAvgCatlatencia(catLatencias);
 		System.out.println("\n\n************* MEDIA FINAL *************");

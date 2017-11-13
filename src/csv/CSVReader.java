@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import entity.CassandraTime;
 import entity.YCSBTime;
@@ -51,6 +52,7 @@ public class CSVReader {
 		String line = "";
 		String lineSplitBy = ";";
 		List<CassandraTime> cassandraTimes = new ArrayList<CassandraTime>();
+		List<Long> processesTime = new ArrayList<Long>();
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
 			while ((line = br.readLine()) != null) {
@@ -58,9 +60,16 @@ public class CSVReader {
 				Integer sample = Integer.parseInt(csvLine[0]);
 				Date init = this.convertToDateFromCassandraLog(csvLine[1]);
 				Date end = this.convertToDateFromCassandraLog(csvLine[2]);
+				Long processTime = this.getDateDiff(init, end, TimeUnit.MILLISECONDS);
+				processesTime.add(processTime);
 				CassandraTime ct = new CassandraTime(sample, init, end);
 				cassandraTimes.add(ct);
 			}
+			Double averageProcessTime = processesTime.stream().mapToDouble(val -> val).average().getAsDouble();
+			System.out.printf("Tempo Médio Processo "+csvFile+" : %.2f", averageProcessTime);
+			System.out.println("\n");
+			processesTime = new ArrayList<Long>();
+			averageProcessTime = 0.0;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -74,6 +83,18 @@ public class CSVReader {
 			}
 		}
 		return cassandraTimes;
+	}
+	
+	/**
+	 * Calcula o tempo de cada processo: flush, compSimples, compMega
+	 * @param init
+	 * @param end
+	 * @param timeUnit
+	 * @return
+	 */
+	private Long getDateDiff(Date init, Date end, TimeUnit timeUnit) {
+		long diffInMillies = end.getTime() - init.getTime();
+	    return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -119,8 +140,8 @@ public class CSVReader {
 	 * @return
 	 */
 	private Date convertToDateFromCassandraLog(String dateStr) {
-		// Exemplo: 13:21:40,134
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss,SSS");
+		// Exemplo: 2017-11-06 13:21:40,134
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
 		try {
 			Date date = formatter.parse(dateStr);
 			return date;
@@ -139,7 +160,7 @@ public class CSVReader {
 	 */
 	private Date convertToDateFromYCSBLog(String dateStr) {
 		// Exemplo: 11:44:05:460
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
 		try {
 			Date date = formatter.parse(dateStr);
 			return date;
